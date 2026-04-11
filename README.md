@@ -19,3 +19,5 @@ pip install jupyterhub-oauthenticator-authz-helpers
 ## License
 
 `jupyterhub-oauthenticator-authz-helpers` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+
+The original inspiration and reference for this set of helpers is https://raw.githubusercontent.com/berkeley-dsep-infra/canvasoauthenticator, which is BSD-3 licensed.
