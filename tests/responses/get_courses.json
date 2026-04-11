@@ -1,0 +1,19 @@
+[
+  {
+    "id": 3248,
+    "name": "2i2c JupyterHub Integration Testing",
+    "course_code": "2i2c-jupyter",
+    "time_zone": "America/New_York",
+    "sis_course_id": null,
+    "integration_id": null,
+    "enrollments": [
+      {
+        "type": "teacher",
+        "role": "TeacherEnrollment",
+        "role_id": 2,
+        "user_id": 1,
+        "enrollment_state": "active"
+      }
+    ]
+  }
+]

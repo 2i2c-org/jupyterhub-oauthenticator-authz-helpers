@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jupyterhub-oauthenticator-authz-helpers"
+dynamic = ["version"]
+description = 'A series of helper utilities for interacting with OAuth providers'
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Angus Hollands", email = "goosey15@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "aiohttp",
+  "escapism"
+]
+
+[dependency-groups]
+test = ["pytest>7", "pytest-asyncio"]
+mypy = ["mypy"]
+
+[project.urls]
+Documentation = "https://github.com/Angus Hollands/jupyterhub-oauthenticator-authz-helpers#readme"
+Issues = "https://github.com/Angus Hollands/jupyterhub-oauthenticator-authz-helpers/issues"
+Source = "https://github.com/Angus Hollands/jupyterhub-oauthenticator-authz-helpers"
+
+[tool.hatch.version]
+path = "src/jupyterhub_oauthenticator_authz_helpers/__about__.py"
+
