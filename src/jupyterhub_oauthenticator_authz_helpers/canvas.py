@@ -1,7 +1,8 @@
-import aiohttp
+mport aiohttp
 import escapism  # type: ignore
 import string
 from collections.abc import Iterable
+import urllib.parse
 
 
 async def fetch_paginated_sequence(token: str, url: str) -> list:
@@ -183,3 +184,15 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
     """
     self_groups = await get_self_groups(canvas_url, token)
     return groups_from_canvas_groups(self_groups)
+
+
+def canvas_url_from_authorize_url(authorize_url: str) -> str:
+    """
+    Return the base Canvas URL for a given OAuth canvas URL
+
+    :param authorize_url: URL to Canvas OAuth endpoint
+    """
+    auth_url = urllib.parse.urlparse(authorize_url)
+    return urllib.parse.urlunparse(
+        auth_url._replace(path="", params="", query="", fragment="")
+    )
