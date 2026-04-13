@@ -21,4 +21,4 @@ jobs:
           pip install -e . --group test
       - name: Test with pytest
         run: |
-          python -m pytest -v -s tests
+          pytest -v -s tests
