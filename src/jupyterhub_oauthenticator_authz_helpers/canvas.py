@@ -1,8 +1,7 @@
-mport aiohttp
+import aiohttp
 import escapism  # type: ignore
 import string
 from collections.abc import Iterable
-import urllib.parse
 
 
 async def fetch_paginated_sequence(token: str, url: str) -> list:
