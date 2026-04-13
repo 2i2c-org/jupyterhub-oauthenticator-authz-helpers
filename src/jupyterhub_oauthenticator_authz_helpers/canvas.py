@@ -9,7 +9,7 @@ async def fetch_paginated_sequence(token: str, url: str) -> list:
     """
     Get paginated items from Canvas.
 
-    https://developerdocs.instructure.com/services/canvas/basics/file.pagination
+    <https://developerdocs.instructure.com/services/canvas/basics/file.pagination>
     """
     urls_to_fetch = [url]
     sequence = []
@@ -37,6 +37,11 @@ async def fetch_paginated_sequence(token: str, url: str) -> list:
 
 
 def ensure_valid_canvas_url(canvas_url: str) -> str:
+    """
+    Ensure that Canvas URL does not end with /
+
+    :param canvas_url: URL to Canvas instance
+    """
     return canvas_url.removesuffix("/")
 
 
@@ -44,7 +49,10 @@ async def get_courses(canvas_url: str, token: str) -> list:
     """
     Get list of active courses for the current user.
 
-    See https://canvas.instructure.com/doc/api/courses.html#method.courses.index
+    :param canvas_url: URL to Canvas instance
+    :param token: Bearer token for authorization
+
+    See <https://canvas.instructure.com/doc/api/courses.html#method.courses.index>.
     """
     canvas_url = ensure_valid_canvas_url(canvas_url)
     url = f"{canvas_url}/api/v1/courses"
@@ -56,7 +64,10 @@ async def get_self_groups(canvas_url: str, token: str) -> list:
     """
     Get list of active groups for the current user.
 
-    See https://canvas.instructure.com/doc/api/groups.html#method.groups.index
+    :param canvas_url: URL to Canvas instance
+    :param token: Bearer token for authorization
+
+    See <https://canvas.instructure.com/doc/api/groups.html#method.groups.index>.
     """
     canvas_url = ensure_valid_canvas_url(canvas_url)
     url = f"{canvas_url}/api/v1/users/self/groups"
@@ -95,7 +106,8 @@ def groups_from_canvas_courses(
 
     for each canvas group the user is a member of.
 
-    :param self_groups: list of Canvas courses the user belongs to
+    :param canvas_groups: list of Canvas Course resources
+    :param canvas_course_key: key within Course response that defines the course ID
     """
     groups = []
 
@@ -127,9 +139,9 @@ def groups_from_canvas_groups(canvas_groups: Iterable) -> list:
 
     for each canvas group the user is a member of.
 
-    See https://developerdocs.instructure.com/services/canvas/resources/groups.
+    See <https://developerdocs.instructure.com/services/canvas/resources/groups>.
 
-    :param self_groups: list of Canvas groups the user belongs to
+    :param canvas_groups: list of Canvas Group resources
     """
     groups = set()
 
@@ -200,13 +212,14 @@ get_user_groups.scopes = ["url:GET|/api/v1/users/self/groups"]
 # Base scopes needed for auth
 def build_auth_urls(canvas_url: str) -> tuple[str, str]:
     """
-    Return a tuple of the (token, auth) URLs for the given Canvas instance.
+    Return a tuple of the ``(token, auth)`` URLs for the given Canvas instance.
 
-    Usage:
-    ```
-    cfg = c.GenericOAuthenticator
-    cfg.token_url, cfg.authorize_url = build_auth_urls(canvas_url)
-    ```
+    Examples
+    --------
+    >>> cfg = c.GenericOAuthenticator
+    >>> cfg.token_url, cfg.authorize_url = build_auth_urls(canvas_url)
+
+    :param canvas_url: URL to Canvas instance
     """
     canvas_url = ensure_valid_canvas_url(canvas_url)
     return (f"{canvas_url}/login/oauth2/token", f"{canvas_url}/login/oauth2/auth")
@@ -216,15 +229,16 @@ def build_profile_url(canvas_url: str) -> str:
     """
     Build the URL of the /users/self/profile endpoint URL for this Canvas instance.
 
-    Access the .scopes attribute of this function to obtain the token scopes necessary
-    to fulfil this request.
+    Access the ``.scopes`` attribute of this function to obtain the token scopes
+    necessary to fulfil this request.
 
-    Usage:
-    ```
-    cfg = c.GenericOAuthenticator
-    cfg.userdata_url = build_profile_url(canvas_url)
-    cfg.scopes = [*build_profile_url.scopes, ...]
-    ```
+    Examples
+    --------
+    >>> cfg = c.GenericOAuthenticator
+    >>> cfg.userdata_url = build_profile_url(canvas_url)
+    >>> cfg.scopes = [*build_profile_url.scopes, ...]
+
+    :param canvas_url: URL to Canvas instance
     """
     canvas_url = ensure_valid_canvas_url(canvas_url)
     return f"{canvas_url}/api/v1/users/self/profile"
