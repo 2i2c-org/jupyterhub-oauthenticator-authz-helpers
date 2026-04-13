@@ -148,6 +148,7 @@ def groups_from_canvas_groups(canvas_groups: Iterable) -> list:
     return [*groups]
 
 
+
 async def get_course_groups(
     canvas_url: str, token: str, canvas_course_key: str
 ) -> list:
@@ -170,6 +171,8 @@ async def get_course_groups(
     courses = await get_courses(canvas_url, token)
     return groups_from_canvas_courses(courses, canvas_course_key)
 
+get_course_groups.scopes = ["url:GET|/api/v1/courses"]
+
 
 async def get_user_groups(canvas_url: str, token: str) -> list:
     """
@@ -185,6 +188,8 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
     self_groups = await get_self_groups(canvas_url, token)
     return groups_from_canvas_groups(self_groups)
 
+get_user_groups.scopes = ["url:GET|/api/v1/users/self/groups"]
+
 
 def canvas_url_from_authorize_url(authorize_url: str) -> str:
     """
@@ -196,3 +201,6 @@ def canvas_url_from_authorize_url(authorize_url: str) -> str:
     return urllib.parse.urlunparse(
         auth_url._replace(path="", params="", query="", fragment="")
     )
+
+
+
