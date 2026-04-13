@@ -1,3 +1,7 @@
+"""
+Helper routines for authorizing against Canvas instances.
+"""
+
 import string
 from collections.abc import Iterable
 

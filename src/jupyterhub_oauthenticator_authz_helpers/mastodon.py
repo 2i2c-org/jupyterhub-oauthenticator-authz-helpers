@@ -1,3 +1,7 @@
+"""
+Helper routines for authorizing against Mastodon instances.
+"""
+
 from collections.abc import Iterable
 from typing import Any
 
