@@ -196,8 +196,8 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
     group names generated from the groups associated with the user authenticated
     by the given token.
 
-    Access the .scopes attribute of this function to obtain the token scopes necessary
-    to fulfil this request.
+    Access the ``.scopes`` attribute of this function to obtain the token scopes
+    necessary to fulfil this request.
 
     :param canvas_url: URL to Canvas instance
     :param token: authentication token granted by OAuth
