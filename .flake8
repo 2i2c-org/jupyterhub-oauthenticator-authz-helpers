@@ -1,0 +1,5 @@
+[flake8]
+# Chosen for black compatibility with bugbear
+max-line-length = 80
+extend-select = B950
+extend-ignore = E203,E501
