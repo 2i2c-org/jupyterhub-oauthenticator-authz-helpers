@@ -191,15 +191,15 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
 get_user_groups.scopes = ["url:GET|/api/v1/users/self/groups"]
 
 
-def canvas_url_from_authorize_url(authorize_url: str) -> str:
+def canvas_api_url_from_v1_profile_url(profile_url: str) -> str:
     """
-    Return the base Canvas URL for a given OAuth canvas URL
+    Return the Canvas API URL ending with `.../api` from a given V1 profile endpoint
 
     :param authorize_url: URL to Canvas OAuth endpoint
     """
     auth_url = urllib.parse.urlparse(authorize_url)
     return urllib.parse.urlunparse(
-        auth_url._replace(path="", params="", query="", fragment="")
+        auth_url._replace(path=auth_url.path.removesuffix("v1/users/self/profile"), params="", query="", fragment="")
     )
 
 
