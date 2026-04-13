@@ -38,3 +38,5 @@ Canvas
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.canvas.get_course_groups
 
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.canvas.build_auth_urls
+
+.. autoclass:: jupyterhub_oauthenticator_authz_helpers.canvas.AuthURLs

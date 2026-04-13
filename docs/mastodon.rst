@@ -39,3 +39,5 @@ Mastodon
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.mastodon.get_followed_groups
 
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.mastodon.build_auth_urls
+
+.. autoclass:: jupyterhub_oauthenticator_authz_helpers.mastodon.AuthURLs
