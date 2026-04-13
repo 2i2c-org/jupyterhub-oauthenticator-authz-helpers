@@ -6,10 +6,11 @@
 jupyterhub_oauthenticator_authz_helpers documentation
 =====================================================
 
+.. automodule:: jupyterhub_oauthenticator_authz_helpers
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: API Documentation
 
    canvas
    mastodon

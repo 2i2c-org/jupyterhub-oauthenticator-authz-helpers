@@ -15,7 +15,7 @@ async def fetch_paginated_sequence(token: str, url: str) -> list:
     """
     Get paginated items from Canvas.
 
-    <https://developerdocs.instructure.com/services/canvas/basics/file.pagination>
+    https://developerdocs.instructure.com/services/canvas/basics/file.pagination
     """
     urls_to_fetch = [url]
     sequence = []
@@ -49,7 +49,7 @@ async def get_courses(canvas_url: str, token: str) -> list:
     :param canvas_url: URL to Canvas instance
     :param token: Bearer token for authorization
 
-    See <https://canvas.instructure.com/doc/api/courses.html#method.courses.index>.
+    See https://canvas.instructure.com/doc/api/courses.html#method.courses.index.
     """
     canvas_url = ensure_base_url(canvas_url)
     url = f"{canvas_url}/api/v1/courses"
@@ -64,7 +64,7 @@ async def get_self_groups(canvas_url: str, token: str) -> list:
     :param canvas_url: URL to Canvas instance
     :param token: Bearer token for authorization
 
-    See <https://canvas.instructure.com/doc/api/groups.html#method.groups.index>.
+    See https://canvas.instructure.com/doc/api/groups.html#method.groups.index.
     """
     canvas_url = ensure_base_url(canvas_url)
     url = f"{canvas_url}/api/v1/users/self/groups"
@@ -136,7 +136,7 @@ def groups_from_canvas_groups(canvas_groups: Iterable) -> list:
 
     for each canvas group the user is a member of.
 
-    See <https://developerdocs.instructure.com/services/canvas/resources/groups>.
+    See https://developerdocs.instructure.com/services/canvas/resources/groups.
 
     :param canvas_groups: list of Canvas Group resources
     """

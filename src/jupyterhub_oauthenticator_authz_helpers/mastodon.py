@@ -38,7 +38,7 @@ async def get_followed_groups(
     :param id_to_group_name: mapping from permitted Mastodon server account IDs to
                              user-friendly names
 
-    See <https://docs.joinmastodon.org/methods/accounts/#relationships>.
+    See https://docs.joinmastodon.org/methods/accounts/#relationships.
     """
     relationships = await get_relationships(
         mastodon_url, token, id_to_group_name.keys()
