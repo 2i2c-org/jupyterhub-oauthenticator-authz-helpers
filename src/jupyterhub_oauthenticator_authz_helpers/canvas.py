@@ -201,6 +201,12 @@ get_user_groups.scopes = ["url:GET|/api/v1/users/self/groups"]
 def build_auth_urls(canvas_url: str) -> tuple[str, str]:
     """
     Return a tuple of the (token, auth) URLs for the given Canvas instance.
+
+    Usage:
+    ```
+    cfg = c.GenericOAuthenticator
+    cfg.token_url, cfg.authorize_url = build_auth_urls(canvas_url)
+    ```
     """
     canvas_url = ensure_valid_canvas_url(canvas_url)
     return (f"{canvas_url}/login/oauth2/token", f"{canvas_url}/login/oauth2/auth")
@@ -213,6 +219,12 @@ def build_profile_url(canvas_url: str) -> str:
     Access the .scopes attribute of this function to obtain the token scopes necessary
     to fulfil this request.
 
+    Usage:
+    ```
+    cfg = c.GenericOAuthenticator
+    cfg.userdata_url = build_profile_url(canvas_url)
+    cfg.scopes = [*build_profile_url.scopes, ...]
+    ```
     """
     canvas_url = ensure_valid_canvas_url(canvas_url)
     return f"{canvas_url}/api/v1/users/self/profile"
