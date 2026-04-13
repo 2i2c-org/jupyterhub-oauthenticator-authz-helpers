@@ -182,6 +182,8 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
 
     group names generated from the groups associated with the user authenticated by the given token.
 
+    Access the .scopes attribute of this function to obtain the token scopes necessary to fulfil this request.
+
     :param canvas_url: URL to Canvas instance
     :param token: authentication token granted by OAuth
     """
@@ -191,16 +193,26 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
 get_user_groups.scopes = ["url:GET|/api/v1/users/self/groups"]
 
 
-def canvas_api_url_from_v1_profile_url(profile_url: str) -> str:
+# Base scopes needed for auth
+def build_auth_urls(canvas_url: str) -> tuple[str, str]:
     """
-    Return the Canvas API URL ending with `.../api` from a given V1 profile endpoint
-
-    :param authorize_url: URL to Canvas OAuth endpoint
+    Return a tuple of the (token, auth) URLs for the given Canvas instance.
     """
-    auth_url = urllib.parse.urlparse(authorize_url)
-    return urllib.parse.urlunparse(
-        auth_url._replace(path=auth_url.path.removesuffix("v1/users/self/profile"), params="", query="", fragment="")
-    )
+    canvas_url = ensure_valid_canvas_url(canvas_url)
+    return (
+ 
+         f"{canvas_url}/login/oauth2/token",
+         f"{canvas_url}/login/oauth2/auth"
+            )
 
+def build_profile_url(canvas_url: str) -> str:
+    """
+    Build the URL of the /users/self/profile endpoint URL for this Canvas instance.
 
+    Access the .scopes attribute of this function to obtain the token scopes necessary to fulfil this request.
 
+    """
+    canvas_url = ensure_valid_canvas_url(canvas_url)
+    return f"{canvas_url}/api/v1/users/self/profile"
+
+build_profile_url.scopes = ["url:GET|/api/v1/users/:user_id/profile"]
