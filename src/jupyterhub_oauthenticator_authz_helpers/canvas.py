@@ -4,6 +4,8 @@ from collections.abc import Iterable
 import aiohttp
 import escapism  # type: ignore
 
+from .utils import ensure_base_url
+
 
 async def fetch_paginated_sequence(token: str, url: str) -> list:
     """
@@ -36,15 +38,6 @@ async def fetch_paginated_sequence(token: str, url: str) -> list:
     return sequence
 
 
-def ensure_valid_canvas_url(canvas_url: str) -> str:
-    """
-    Ensure that Canvas URL does not end with /
-
-    :param canvas_url: URL to Canvas instance
-    """
-    return canvas_url.removesuffix("/")
-
-
 async def get_courses(canvas_url: str, token: str) -> list:
     """
     Get list of active courses for the current user.
@@ -54,7 +47,7 @@ async def get_courses(canvas_url: str, token: str) -> list:
 
     See <https://canvas.instructure.com/doc/api/courses.html#method.courses.index>.
     """
-    canvas_url = ensure_valid_canvas_url(canvas_url)
+    canvas_url = ensure_base_url(canvas_url)
     url = f"{canvas_url}/api/v1/courses"
 
     return await fetch_paginated_sequence(token, url)
@@ -69,7 +62,7 @@ async def get_self_groups(canvas_url: str, token: str) -> list:
 
     See <https://canvas.instructure.com/doc/api/groups.html#method.groups.index>.
     """
-    canvas_url = ensure_valid_canvas_url(canvas_url)
+    canvas_url = ensure_base_url(canvas_url)
     url = f"{canvas_url}/api/v1/users/self/groups"
 
     return await fetch_paginated_sequence(token, url)
@@ -221,7 +214,7 @@ def build_auth_urls(canvas_url: str) -> tuple[str, str]:
 
     :param canvas_url: URL to Canvas instance
     """
-    canvas_url = ensure_valid_canvas_url(canvas_url)
+    canvas_url = ensure_base_url(canvas_url)
     return (f"{canvas_url}/login/oauth2/token", f"{canvas_url}/login/oauth2/auth")
 
 
@@ -240,7 +233,7 @@ def build_profile_url(canvas_url: str) -> str:
 
     :param canvas_url: URL to Canvas instance
     """
-    canvas_url = ensure_valid_canvas_url(canvas_url)
+    canvas_url = ensure_base_url(canvas_url)
     return f"{canvas_url}/api/v1/users/self/profile"
 
 
