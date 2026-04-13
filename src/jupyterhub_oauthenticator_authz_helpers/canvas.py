@@ -218,7 +218,7 @@ def build_auth_urls(canvas_url: str) -> tuple[str, str]:
     return (f"{canvas_url}/login/oauth2/token", f"{canvas_url}/login/oauth2/auth")
 
 
-def build_profile_url(canvas_url: str) -> str:
+def build_userdata_url(canvas_url: str) -> str:
     """
     Build the URL of the /users/self/profile endpoint URL for this Canvas instance.
 
@@ -229,7 +229,7 @@ def build_profile_url(canvas_url: str) -> str:
     --------
     >>> cfg = c.GenericOAuthenticator
     >>> cfg.userdata_url = build_profile_url(canvas_url)
-    >>> cfg.scopes = [*build_profile_url.scopes, ...]
+    >>> cfg.scopes = [*build_userdata_url.scopes, ...]
 
     :param canvas_url: URL to Canvas instance
     """
@@ -237,4 +237,4 @@ def build_profile_url(canvas_url: str) -> str:
     return f"{canvas_url}/api/v1/users/self/profile"
 
 
-build_profile_url.scopes = ["url:GET|/api/v1/users/:user_id/profile"]
+build_userdata_url.scopes = ["url:GET|/api/v1/users/:user_id/profile"]

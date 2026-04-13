@@ -52,3 +52,45 @@ async def get_followed_groups(
 
         groups.append(f"following::{alias}")
     return groups
+
+
+get_followed_groups.scopes = ["read:follows"]
+
+
+# Base scopes needed for auth
+def build_auth_urls(mastodon_url: str) -> tuple[str, str]:
+    """
+    Return a tuple of the ``(token, auth)`` URLs for the given Mastodon instance.
+
+    Examples
+    --------
+    >>> cfg = c.GenericOAuthenticator
+    >>> cfg.token_url, cfg.authorize_url = build_auth_urls(mastodon_url)
+
+    :param canvas_url: URL to Mastodon instance
+    """
+    mastodon_url = ensure_base_url(mastodon_url)
+    return (f"{mastodon_url}/oauth/token", f"{mastodon_url}/oauth/authorize")
+
+
+def build_userdata_url(mastodon_url: str) -> str:
+    """
+    Build the URL of the /v1/accounts/verify_credentials endpoint URL for this
+    Mastodon instance.
+
+    Access the ``.scopes`` attribute of this function to obtain the token scopes
+    necessary to fulfil this request.
+
+    Examples
+    --------
+    >>> cfg = c.GenericOAuthenticator
+    >>> cfg.userdata_url = build_userdata_url(mastodon_url)
+    >>> cfg.scopes = [*build_userdata_url.scopes, ...]
+
+    :param mastodon_url: URL to Mastodon instance
+    """
+    mastodon_url = ensure_base_url(mastodon_url)
+    return f"{mastodon_url}/api/v1/accounts/verify_credentials"
+
+
+build_userdata_url.scopes = ["read:accounts"]
