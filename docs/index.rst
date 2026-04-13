@@ -12,3 +12,4 @@ jupyterhub_oauthenticator_authz_helpers documentation
    :caption: Contents:
 
    canvas
+   mastodon
