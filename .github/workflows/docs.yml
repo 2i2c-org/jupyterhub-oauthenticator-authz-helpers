@@ -30,7 +30,7 @@ jobs:
       - name: Build documentation
         run: |
             sphinx-build -M html . _build
-        with:
+        uses:
           working-directory: docs
 
 
