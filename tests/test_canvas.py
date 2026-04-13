@@ -1,18 +1,16 @@
 import contextlib
-import pytest
 import json
 import pathlib
-import pytest_asyncio
 import unittest.mock
 
-from jupyterhub_oauthenticator_authz_helpers.canvas import (
+import pytest
+
+from jupyterhub_oauthenticator_authz_helpers.canvas import (  # Exported functions
+    get_course_groups,
     get_courses,
     get_self_groups,
-    # Exported functions
-    get_course_groups,
     get_user_groups,
 )
-
 
 TEST_FILES = pathlib.Path(__file__).parent / "responses"
 
@@ -44,6 +42,4 @@ async def test_canvas_users():
     with mock_response(get_self_groups):
         groups = await get_user_groups("", "")
 
-    assert groups == [
-        "course::3::group::Math&20Group&201",
-    ]
+    assert groups == ["course::3::group::Math&20Group&201"]

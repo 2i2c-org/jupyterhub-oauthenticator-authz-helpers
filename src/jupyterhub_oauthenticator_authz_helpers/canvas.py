@@ -1,7 +1,8 @@
-import aiohttp
-import escapism  # type: ignore
 import string
 from collections.abc import Iterable
+
+import aiohttp
+import escapism  # type: ignore
 
 
 async def fetch_paginated_sequence(token: str, url: str) -> list:
@@ -20,7 +21,8 @@ async def fetch_paginated_sequence(token: str, url: str) -> list:
             ) as response:
                 if response.status != 200:
                     raise Exception(
-                        f"Error {response.status} while fetching items from {url}: {response.text()}"
+                        f"Error {response.status} while fetching items from "
+                        f"{url}: {response.text()}"
                     )
                 sequence.extend(await response.json())
 
@@ -147,7 +149,6 @@ def groups_from_canvas_groups(canvas_groups: Iterable) -> list:
     return [*groups]
 
 
-
 async def get_course_groups(
     canvas_url: str, token: str, canvas_course_key: str
 ) -> list:
@@ -160,8 +161,8 @@ async def get_course_groups(
 
         course::<course-id>::enrollment_type::<enrollment-type>
 
-    group names generated from the courses and course enrollments that the user authenticated by
-    the given token has access to.
+    group names generated from the courses and course enrollments that the user
+    authenticated by the given token has access to.
 
     :param canvas_url: URL to Canvas instance
     :param token: authentication token granted by OAuth
@@ -169,6 +170,7 @@ async def get_course_groups(
     """
     courses = await get_courses(canvas_url, token)
     return groups_from_canvas_courses(courses, canvas_course_key)
+
 
 get_course_groups.scopes = ["url:GET|/api/v1/courses"]
 
@@ -179,15 +181,18 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
 
         <context-type>::<context-id>::group::<name>
 
-    group names generated from the groups associated with the user authenticated by the given token.
+    group names generated from the groups associated with the user authenticated
+    by the given token.
 
-    Access the .scopes attribute of this function to obtain the token scopes necessary to fulfil this request.
+    Access the .scopes attribute of this function to obtain the token scopes necessary
+    to fulfil this request.
 
     :param canvas_url: URL to Canvas instance
     :param token: authentication token granted by OAuth
     """
     self_groups = await get_self_groups(canvas_url, token)
     return groups_from_canvas_groups(self_groups)
+
 
 get_user_groups.scopes = ["url:GET|/api/v1/users/self/groups"]
 
@@ -198,20 +203,19 @@ def build_auth_urls(canvas_url: str) -> tuple[str, str]:
     Return a tuple of the (token, auth) URLs for the given Canvas instance.
     """
     canvas_url = ensure_valid_canvas_url(canvas_url)
-    return (
- 
-         f"{canvas_url}/login/oauth2/token",
-         f"{canvas_url}/login/oauth2/auth"
-            )
+    return (f"{canvas_url}/login/oauth2/token", f"{canvas_url}/login/oauth2/auth")
+
 
 def build_profile_url(canvas_url: str) -> str:
     """
     Build the URL of the /users/self/profile endpoint URL for this Canvas instance.
 
-    Access the .scopes attribute of this function to obtain the token scopes necessary to fulfil this request.
+    Access the .scopes attribute of this function to obtain the token scopes necessary
+    to fulfil this request.
 
     """
     canvas_url = ensure_valid_canvas_url(canvas_url)
     return f"{canvas_url}/api/v1/users/self/profile"
+
 
 build_profile_url.scopes = ["url:GET|/api/v1/users/:user_id/profile"]

@@ -41,3 +41,10 @@ Source = "https://github.com/Angus Hollands/jupyterhub-oauthenticator-authz-help
 [tool.hatch.version]
 path = "src/jupyterhub_oauthenticator_authz_helpers/__about__.py"
 
+[tool.isort]
+profile = "black"
+
+[tool.black]
+# Assume future Python versions do not break valid older code, and use this as minimum
+# This makes it possible to run black with older-than-latest interpreters
+target-version = ["py310"]
