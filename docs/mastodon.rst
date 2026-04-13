@@ -8,7 +8,7 @@ Mastodon
 
    .. code-block:: python
 
-      from jupyterhub_oauthenticator_authz_helpers.mastodon import get_followed_groups, build_auth_urls, build_userdata_url
+      from jupyterhub_oauthenticator_authz_helpers.mastodon import get_followed_groups, build_auth_urls
 
       mastodon_url = "<MASTODON_URL>"
 
@@ -31,10 +31,11 @@ Mastodon
       cfg = c.GenericOAuthenticator
       cfg.modify_auth_state_hook = auth_state_hook
 
-      cfg.token_url, cfg.authorize_url = build_auth_urls(mastodon_url)
-      cfg.userdata_url = build_userdata_url(mastodon_url)
+      cfg.authorize_url, cfg.token_url, cfg.userdata_url = build_auth_urls(mastodon_url)
 
       # Scopes that this token will need, pulled from functions that we've used above
-      cfg.scope = [*build_userdata_url.scopes, *get_followed_groups.scopes]
+      cfg.scope = [*build_auth_urls.scopes, *get_followed_groups.scopes]
 
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.mastodon.get_followed_groups
+
+.. autofunction:: jupyterhub_oauthenticator_authz_helpers.mastodon.build_auth_urls

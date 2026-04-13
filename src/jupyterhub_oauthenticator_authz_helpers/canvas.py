@@ -4,6 +4,7 @@ Helper routines for authorizing against Canvas instances.
 
 import string
 from collections.abc import Iterable
+from typing import NamedTuple
 
 import aiohttp
 import escapism  # type: ignore
@@ -206,39 +207,31 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
 get_user_groups.scopes = ["url:GET|/api/v1/users/self/groups"]
 
 
+class AuthURLs(NamedTuple):
+    authorize: str
+    token: str
+    userdata: str
+
+
 # Base scopes needed for auth
-def build_auth_urls(canvas_url: str) -> tuple[str, str]:
+def build_auth_urls(canvas_url: str) -> AuthURLs:
     """
-    Return a tuple of the ``(token, auth)`` URLs for the given Canvas instance.
+    Return a named tuple of the ``(auth, token, userdata)`` URLs for the given
+    Canvas instance.
 
     Examples
     --------
     >>> cfg = c.GenericOAuthenticator
-    >>> cfg.token_url, cfg.authorize_url = build_auth_urls(canvas_url)
+    >>> cfg.authorize_url, cfg.token_url, cfg.userdata_url = build_auth_urls(canvas_url)
 
     :param canvas_url: URL to Canvas instance
     """
     canvas_url = ensure_base_url(canvas_url)
-    return (f"{canvas_url}/login/oauth2/token", f"{canvas_url}/login/oauth2/auth")
+    return AuthURLs(
+        f"{canvas_url}/login/oauth2/auth",
+        f"{canvas_url}/login/oauth2/token",
+        f"{canvas_url}/api/v1/users/self/profile",
+    )
 
 
-def build_userdata_url(canvas_url: str) -> str:
-    """
-    Build the URL of the /users/self/profile endpoint URL for this Canvas instance.
-
-    Access the ``.scopes`` attribute of this function to obtain the token scopes
-    necessary to fulfil this request.
-
-    Examples
-    --------
-    >>> cfg = c.GenericOAuthenticator
-    >>> cfg.userdata_url = build_profile_url(canvas_url)
-    >>> cfg.scopes = [*build_userdata_url.scopes, ...]
-
-    :param canvas_url: URL to Canvas instance
-    """
-    canvas_url = ensure_base_url(canvas_url)
-    return f"{canvas_url}/api/v1/users/self/profile"
-
-
-build_userdata_url.scopes = ["url:GET|/api/v1/users/:user_id/profile"]
+build_auth_urls.scopes = ["url:GET|/api/v1/users/:user_id/profile"]

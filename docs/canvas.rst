@@ -8,7 +8,7 @@ Canvas
 
    .. code-block:: python
 
-      from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls, build_userdata_url
+      from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls
 
       canvas_url = "<CANVAS-URL>"
 
@@ -28,16 +28,13 @@ Canvas
       cfg = c.GenericOAuthenticator
       cfg.modify_auth_state_hook = auth_state_hook
 
-      cfg.token_url, cfg.authorize_url = build_auth_urls(canvas_url)
-      cfg.userdata_url = build_userdata_url(canvas_url)
+      cfg.authorize_url, cfg.token_url, cfg.userdata_url = build_auth_urls(canvas_url)
 
       # Scopes that this token will need, pulled from functions that we've used above
-      cfg.scope = [*build_userdata_url.scopes, *get_user_groups.scopes, *get_course_groups.scopes]
+      cfg.scope = [*build_auth_urls.scopes, *get_user_groups.scopes, *get_course_groups.scopes]
 
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.canvas.get_user_groups
 
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.canvas.get_course_groups
 
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.canvas.build_auth_urls
-
-.. autofunction:: jupyterhub_oauthenticator_authz_helpers.canvas.build_userdata_url
