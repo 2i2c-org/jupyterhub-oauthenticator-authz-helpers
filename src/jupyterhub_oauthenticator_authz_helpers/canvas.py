@@ -12,19 +12,23 @@ import escapism  # type: ignore
 from .utils import ensure_base_url
 
 
-async def fetch_paginated_sequence(token: str, url: str) -> list:
+async def fetch_canvas_resource(
+    token: str, url: str, includes: list[str] = None
+) -> list:
     """
     Get paginated items from Canvas.
 
     https://developerdocs.instructure.com/services/canvas/basics/file.pagination
     """
-    urls_to_fetch = [url]
     sequence = []
+    params = {"include": includes}
 
     async with aiohttp.ClientSession() as session:
-        while urls_to_fetch:
+        while True:
             async with session.get(
-                urls_to_fetch.pop(), headers={"Authorization": f"Bearer {token}"}
+                url,
+                headers={"Authorization": f"Bearer {token}"},
+                params=params,
             ) as response:
                 if response.status != 200:
                     raise Exception(
@@ -37,8 +41,9 @@ async def fetch_paginated_sequence(token: str, url: str) -> list:
                 try:
                     next_link = response.links["next"]
                 except KeyError:
-                    continue
-                urls_to_fetch.append(str(next_link["url"]))
+                    break
+
+                url = str(next_link["url"])
 
     return sequence
 
@@ -55,7 +60,7 @@ async def get_courses(canvas_url: str, token: str) -> list:
     canvas_url = ensure_base_url(canvas_url)
     url = f"{canvas_url}/api/v1/courses"
 
-    return await fetch_paginated_sequence(token, url)
+    return await fetch_canvas_resource(token, url, includes=["sections"])
 
 
 async def get_self_groups(canvas_url: str, token: str) -> list:
@@ -70,7 +75,7 @@ async def get_self_groups(canvas_url: str, token: str) -> list:
     canvas_url = ensure_base_url(canvas_url)
     url = f"{canvas_url}/api/v1/users/self/groups"
 
-    return await fetch_paginated_sequence(token, url)
+    return await fetch_canvas_resource(token, url)
 
 
 def escape_group_segment(segment: str) -> str:
@@ -123,6 +128,14 @@ def groups_from_canvas_courses(
             groups.append(
                 build_jupyterhub_group(
                     "course", course_id, "enrollment_type", enrollment.get("type")
+                )
+            )
+
+        # Create the section groups
+        for section in course.get("sections", []):
+            groups.append(
+                build_jupyterhub_group(
+                    "course", course_id, "section", section.get("name")
                 )
             )
 
