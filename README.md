@@ -3,7 +3,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/jupyterhub-oauthenticator-authz-helpers.svg)](https://pypi.org/project/jupyterhub-oauthenticator-authz-helpers)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/jupyterhub-oauthenticator-authz-helpers.svg)](https://pypi.org/project/jupyterhub-oauthenticator-authz-helpers)
 
------
+---
 
 ## Table of Contents
 
