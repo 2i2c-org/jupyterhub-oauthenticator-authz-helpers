@@ -5,7 +5,7 @@ Canvas
 
    :members:
 
-   .. note: 
+   .. note:
       Provisioned dev-key requires support for `includes` to built section groups.
 
    .. code-block:: python
