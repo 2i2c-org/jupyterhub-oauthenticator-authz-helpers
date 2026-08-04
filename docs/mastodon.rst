@@ -2,7 +2,6 @@ Mastodon
 ========
 
 .. automodule:: jupyterhub_oauthenticator_authz_helpers.mastodon
-
    :members:
 
 
@@ -18,14 +17,14 @@ Mastodon
       }
 
       async def auth_state_hook(authenticator, auth_state):
-        if auth_state:
-          access_token = auth_state["access_token"]
+        if auth_state is None:
+          return None
 
-          auth_state[authenticator.auth_state_groups_key] = [
-            # Populate groups from Canvas courses, using the scheme defined in get_course_groups
-            *await get_followed_groups(mastodon_url, access_token, id_to_alias),
-          ]
-
+        access_token = auth_state["access_token"]
+        auth_state[authenticator.auth_state_groups_key] = [
+          # Populate groups from Canvas courses, using the scheme defined in get_course_groups
+          *await get_followed_groups(mastodon_url, access_token, id_to_alias),
+        ]
         return auth_state
 
       cfg = c.GenericOAuthenticator
