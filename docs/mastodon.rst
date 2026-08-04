@@ -28,10 +28,12 @@ Mastodon
         return auth_state
 
       cfg = c.GenericOAuthenticator
+      # Inject auth state
       cfg.modify_auth_state_hook = auth_state_hook
-
+      # Define a custom key for auth groups
+      cfg.auth_state_groups_key = "custom-groups"
+      # Configure auth and other URLs
       cfg.authorize_url, cfg.token_url, cfg.userdata_url = build_auth_urls(mastodon_url)
-
       # Scopes that this token will need, pulled from functions that we've used above
       cfg.scope = [*build_auth_urls.scopes, *get_followed_groups.scopes]
 

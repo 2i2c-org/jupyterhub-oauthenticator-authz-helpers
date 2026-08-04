@@ -8,6 +8,8 @@ Canvas
 
       Provisioned dev-key requires support for `includes` to built section groups.
 
+
+   Basic configuration to pull groups from Canvas courses, and Canvas user groups is as follows:
    .. code-block:: python
 
       from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls
@@ -15,8 +17,8 @@ Canvas
       canvas_url = "<CANVAS-URL>"
 
       async def auth_state_hook(authenticator, auth_state):
-        if not auth_state:
-          return auth_state
+        if auth_state is None:
+          return None
 
         access_token = auth_state["access_token"]
         auth_state[authenticator.auth_state_groups_key] = [
@@ -30,10 +32,14 @@ Canvas
       cfg = c.GenericOAuthenticator
       # Inject auth state
       cfg.modify_auth_state_hook = auth_state_hook
-      # Configure auth and othe rURLs
+      # Define a custom key for auth groups
+      cfg.auth_state_groups_key = "custom-groups"
+      # Configure auth and other URLs
       cfg.authorize_url, cfg.token_url, cfg.userdata_url = build_auth_urls(canvas_url)
       # Scopes that this token will need, pulled from functions that we've used above
       cfg.scope = [*build_auth_urls.scopes, *get_user_groups.scopes, *get_course_groups.scopes]
+
+   It is also possible to use
 
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.canvas.get_user_groups
 
