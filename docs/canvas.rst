@@ -10,6 +10,7 @@ Canvas
 
 
    Basic configuration to pull groups from Canvas courses, and Canvas user groups is as follows:
+
    .. code-block:: python
 
       from jupyterhub_oauthenticator_authz_helpers.canvas import get_user_groups, get_course_groups, build_auth_urls
@@ -38,8 +39,6 @@ Canvas
       cfg.authorize_url, cfg.token_url, cfg.userdata_url = build_auth_urls(canvas_url)
       # Scopes that this token will need, pulled from functions that we've used above
       cfg.scope = [*build_auth_urls.scopes, *get_user_groups.scopes, *get_course_groups.scopes]
-
-   It is also possible to use
 
 .. autofunction:: jupyterhub_oauthenticator_authz_helpers.canvas.get_user_groups
 
