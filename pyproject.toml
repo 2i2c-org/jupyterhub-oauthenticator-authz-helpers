@@ -51,4 +51,4 @@ profile = "black"
 target-version = ["py310"]
 
 [tool.mypy]
-exclude = ["^docs/.*$"]
+exclude = ["^docs/.*$", "^tests/.*$"]
