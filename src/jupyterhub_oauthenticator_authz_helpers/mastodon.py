@@ -3,16 +3,21 @@ Helper routines for authorizing against Mastodon instances.
 """
 
 from collections.abc import Collection, Iterable
-from typing import Any
+from typing import Any, TypedDict
 
 import aiohttp
 
 from .common import AuthURLs, BaseURL, ensure_base_url
 
 
+class Relationship(TypedDict):
+    id: str
+    following: bool
+
+
 async def get_relationships(
     mastodon_url: BaseURL, token: str, relationships: Iterable[str]
-) -> list[str]:
+) -> list[Relationship]:
     relationships_url = f"{mastodon_url}/api/v1/accounts/relationships"
 
     async with (
@@ -66,7 +71,7 @@ async def get_followed_groups(
     return groups
 
 
-get_followed_groups.scopes = ["read:follows"]
+get_followed_groups.scopes = ["read:follows"]  # type: ignore
 
 
 # Base scopes needed for auth
@@ -90,4 +95,4 @@ def build_auth_urls(mastodon_url: str) -> AuthURLs:
     )
 
 
-build_auth_urls.scopes = ["read:accounts"]
+build_auth_urls.scopes = ["read:accounts"]  # type: ignore
