@@ -227,7 +227,7 @@ async def get_course_groups(
     if canvas_course_key not in VALID_CANVAS_COURSE_KEYS:
         raise ValueError(f"Invalid course key: {canvas_course_key!r}")
 
-    if canvas_course_key not in VALID_CANVAS_SECTION_KEYS:
+    if canvas_section_key not in VALID_CANVAS_SECTION_KEYS:
         raise ValueError(f"Invalid section key: {canvas_section_key!r}")
 
     courses = await get_courses(ensure_base_url(canvas_url), token)
