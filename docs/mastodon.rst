@@ -23,7 +23,7 @@ Mastodon
         access_token = auth_state["access_token"]
         auth_state[authenticator.auth_state_groups_key] = [
           # Populate groups from Canvas courses, using the scheme defined in get_course_groups
-          *await get_followed_groups(mastodon_url, access_token, id_to_alias),
+          *await get_followed_groups(mastodon_url, access_token, allow_list=id_to_alias),
         ]
         return auth_state
 

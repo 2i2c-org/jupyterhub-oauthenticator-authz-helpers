@@ -24,8 +24,8 @@ Canvas
         access_token = auth_state["access_token"]
         auth_state[authenticator.auth_state_groups_key] = [
           # Populate groups from Canvas courses, using the scheme defined in get_course_groups
-          *await get_course_groups(canvas_url, access_token, "course_code"),
-          # Populate groups from Canvas groups, using the scheme defined in get_user_groups
+          *await get_course_groups(canvas_url, access_token, canvas_course_key="course_code", canvas_section_key="id"),
+          # Populate groups from Canvas groups, using the scheme defined in get_user_group
           *await get_user_groups(canvas_url, access_token),
         ]
         return auth_state
