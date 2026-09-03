@@ -6,10 +6,10 @@ Canvas
 
    .. note::
 
-      Provisioned dev-key requires support for `includes` to built section groups.
+      Provisioned dev-key requires support for `includes` to build groups from Canvas sections. Without this scope, the :py:func:`get_course_groups` function will succeed but groups derived from sections will not be returned.
 
 
-   Basic configuration to pull groups from Canvas courses, and Canvas user groups is as follows:
+   Basic configuration to pull groups from Canvas courses, user groups, and sections, is as follows:
 
    .. code-block:: python
 

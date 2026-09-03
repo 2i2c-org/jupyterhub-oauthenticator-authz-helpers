@@ -3,11 +3,11 @@ Helper routines for authorizing against Mastodon instances.
 """
 
 from collections.abc import Iterable
-from typing import Any, NamedTuple
+from typing import Any
 
 import aiohttp
 
-from .utils import ensure_base_url
+from .common import AuthURLs, ensure_base_url
 
 
 async def get_relationships(
@@ -16,14 +16,14 @@ async def get_relationships(
     mastodon_url = ensure_base_url(mastodon_url)
     relationships_url = f"{mastodon_url}/api/v1/accounts/relationships"
 
-    async with aiohttp.ClientSession(
-        headers={"Authorization": f"Bearer {token}"}
-    ) as session:
-        async with session.get(
+    async with (
+        aiohttp.ClientSession(headers={"Authorization": f"Bearer {token}"}) as session,
+        session.get(
             relationships_url,
             params={"id[]": [*relationships]},
-        ) as response:
-            return await response.json()
+        ) as response,
+    ):
+        return await response.json()
 
 
 async def get_followed_groups(
@@ -59,12 +59,6 @@ async def get_followed_groups(
 
 
 get_followed_groups.scopes = ["read:follows"]
-
-
-class AuthURLs(NamedTuple):
-    authorize: str
-    token: str
-    userdata: str
 
 
 # Base scopes needed for auth

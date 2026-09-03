@@ -4,16 +4,15 @@ Helper routines for authorizing against Canvas instances.
 
 import string
 from collections.abc import Iterable
-from typing import NamedTuple
 
 import aiohttp
-import escapism  # type: ignore
+import escapism
 
-from .utils import ensure_base_url
+from .common import AuthURLs, ensure_base_url
 
 
 async def fetch_canvas_resource(
-    token: str, url: str, includes: list[str] = None
+    token: str, url: str, includes: list[str] | None = None
 ) -> list:
     """
     Get paginated items from Canvas.
@@ -31,7 +30,7 @@ async def fetch_canvas_resource(
                 params=params,
             ) as response:
                 if response.status != 200:
-                    raise Exception(
+                    raise RuntimeError(
                         f"Error {response.status} while fetching items from "
                         f"{url}: {response.text()}"
                     )
@@ -218,12 +217,6 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
 
 
 get_user_groups.scopes = ["url:GET|/api/v1/users/self/groups"]
-
-
-class AuthURLs(NamedTuple):
-    authorize: str
-    token: str
-    userdata: str
 
 
 # Base scopes needed for auth
