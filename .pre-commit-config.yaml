@@ -22,5 +22,5 @@ repos:
     rev: "v2.3.1"
     hooks:
       - id: mypy
-        args: ["--config-file", "pyproject.toml", "-asdasdasd"]
+        args: [--config-file, pyproject.toml]
         additional_dependencies: ["aiohttp"]

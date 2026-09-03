@@ -6,7 +6,7 @@ import string
 from collections.abc import Iterable
 
 import aiohttp
-import escapism
+import escapism  # type: ignore
 
 from .common import AuthURLs, BaseURL, ensure_base_url
 
@@ -27,7 +27,7 @@ async def fetch_canvas_resource(
             async with session.get(
                 url,
                 headers={"Authorization": f"Bearer {token}"},
-                params=params,
+                params=params,  # type: ignore
             ) as response:
                 if response.status != 200:
                     raise RuntimeError(
