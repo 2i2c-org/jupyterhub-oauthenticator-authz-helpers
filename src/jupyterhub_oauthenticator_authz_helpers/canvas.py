@@ -204,6 +204,7 @@ VALID_CANVAS_SECTION_KEYS = frozenset(
 async def get_course_groups(
     canvas_url: str,
     token: str,
+    *,
     canvas_course_key: str = "name",
     canvas_section_key: str = "name",
 ) -> list:

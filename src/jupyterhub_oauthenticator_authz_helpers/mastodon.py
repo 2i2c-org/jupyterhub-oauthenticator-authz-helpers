@@ -2,7 +2,7 @@
 Helper routines for authorizing against Mastodon instances.
 """
 
-from collections.abc import Iterable
+from collections.abc import Collection, Iterable
 from typing import Any
 
 import aiohttp
@@ -26,21 +26,30 @@ async def get_relationships(
 
 
 async def get_followed_groups(
-    mastodon_url: str, token: str, id_to_group_name: dict[str, Any]
+    mastodon_url: str, token: str, *, allow_list: dict[str, Any] | Collection[str]
 ) -> list[str]:
     """
-    Get list of account IDs that are followed by the user identified by the given token
+    Get list of account IDs that are followed by the user identified by the given token,
     from a pre-determined allow-list of accounts.
+
+    This security model assumes that each account in the allow-list has control over its
+    follow requests.
+
+    For example, if user "A" follows user "GPU" and user "HighCPU", they will be granted
+    both groups.
 
     :param mastodon_url: URL to Mastodon instance
     :param token: Bearer token for authorization
-    :param id_to_group_name: mapping from permitted Mastodon server account IDs to
-                             user-friendly names
+    :param allow_list: collection of server account IDs representing distinct groups, or
+    mapping from such IDs to user-friendly names, e.g. XXXXX → GPU
 
     See https://docs.joinmastodon.org/methods/accounts/#relationships.
     """
+    if not isinstance(allow_list, dict):
+        allow_list = {account_id: account_id for account_id in allow_list}
+
     relationships = await get_relationships(
-        ensure_base_url(mastodon_url), token, id_to_group_name.keys()
+        ensure_base_url(mastodon_url), token, allow_list.keys()
     )
     groups = []
     for item in relationships:
@@ -49,7 +58,7 @@ async def get_followed_groups(
 
         account_id = item["id"]
         try:
-            alias = id_to_group_name[account_id]
+            alias = allow_list[account_id]
         except KeyError:
             continue
 
