@@ -8,7 +8,7 @@ from collections.abc import Iterable
 import aiohttp
 import escapism
 
-from .common import AuthURLs, ensure_base_url
+from .common import AuthURLs, BaseURL, ensure_base_url
 
 
 async def fetch_canvas_resource(
@@ -47,7 +47,7 @@ async def fetch_canvas_resource(
     return sequence
 
 
-async def get_courses(canvas_url: str, token: str) -> list:
+async def get_courses(canvas_url: BaseURL, token: str) -> list:
     """
     Get list of active courses for the current user.
 
@@ -56,13 +56,12 @@ async def get_courses(canvas_url: str, token: str) -> list:
 
     See https://canvas.instructure.com/doc/api/courses.html#method.courses.index.
     """
-    canvas_url = ensure_base_url(canvas_url)
     url = f"{canvas_url}/api/v1/courses"
 
     return await fetch_canvas_resource(token, url, includes=["sections"])
 
 
-async def get_self_groups(canvas_url: str, token: str) -> list:
+async def get_self_groups(canvas_url: BaseURL, token: str) -> list:
     """
     Get list of active groups for the current user.
 
@@ -71,7 +70,6 @@ async def get_self_groups(canvas_url: str, token: str) -> list:
 
     See https://canvas.instructure.com/doc/api/groups.html#method.groups.index.
     """
-    canvas_url = ensure_base_url(canvas_url)
     url = f"{canvas_url}/api/v1/users/self/groups"
 
     return await fetch_canvas_resource(token, url)
@@ -95,46 +93,56 @@ def build_jupyterhub_group(*terms) -> str:
 
 
 def groups_from_canvas_courses(
-    canvas_courses: Iterable, canvas_course_key: str
+    canvas_courses: Iterable,
+    canvas_course_key: str,
+    canvas_section_key: str,
 ) -> list:
     """
     Create group identifiers of the form
 
-        course::<course-id>
+        course::<course>
 
     and
 
-        course::<course-id>::enrollment_type::<enrollment-type>
+        course::<course>::enrollment_type::<enrollment-type>
 
-    for each canvas group the user is a member of.
+    for each Canvas group the user is a member of.
 
     :param canvas_groups: list of Canvas Course resources
     :param canvas_course_key: key within Course response that defines the course ID
+    :param canvas_section_key: key within Section response that defines the course ID
     """
     groups = []
 
     for course in canvas_courses:
-        course_id = course.get(canvas_course_key, None)
-        if course_id is None:
+        course_component = course.get(canvas_course_key, None)
+        if course_component is None:
             continue
 
         # Create the main course group
-        groups.append(build_jupyterhub_group("course", course_id))
+        groups.append(build_jupyterhub_group("course", course_component))
 
         # Create the enrollment groups
         # See https://canvas.instructure.com/doc/api/courses.html#method.courses.index
         for enrollment in course.get("enrollments", []):
             groups.append(
                 build_jupyterhub_group(
-                    "course", course_id, "enrollment_type", enrollment.get("type")
+                    "course",
+                    course_component,
+                    "enrollment_type",
+                    enrollment.get("type"),
                 )
             )
 
         # Create the section groups
         for section in course.get("sections", []):
+            section_component = section.get(canvas_section_key, None)
+            if section_component is None:
+                continue
+
             groups.append(
                 build_jupyterhub_group(
-                    "course", course_id, "section", section.get("name")
+                    "course", course_component, "section", section_component
                 )
             )
 
@@ -145,9 +153,9 @@ def groups_from_canvas_groups(canvas_groups: Iterable) -> list:
     """
     Create group identifiers of the form
 
-        <context-type>::<context-id>::group::<name>
+        <context-type>::<context-id>::group::<group>
 
-    for each canvas group the user is a member of.
+    for each Canvas group the user is a member of.
 
     See https://developerdocs.instructure.com/services/canvas/resources/groups.
 
@@ -171,8 +179,33 @@ def groups_from_canvas_groups(canvas_groups: Iterable) -> list:
     return [*groups]
 
 
+VALID_CANVAS_COURSE_KEYS = frozenset(
+    {
+        "id",
+        "name",
+        "sis_course_id",
+        "uuid",
+        "sis_import_id",
+        "course_code",
+        "original_name",
+    }
+)
+
+VALID_CANVAS_SECTION_KEYS = frozenset(
+    {
+        "id",
+        "name",
+        "sis_section_id",
+        "sis_import_id",
+    }
+)
+
+
 async def get_course_groups(
-    canvas_url: str, token: str, canvas_course_key: str
+    canvas_url: str,
+    token: str,
+    canvas_course_key: str = "name",
+    canvas_section_key: str = "name",
 ) -> list:
     """
     Return a list of
@@ -190,8 +223,14 @@ async def get_course_groups(
     :param token: authentication token granted by OAuth
     :param canvas_course_key: key in Course response that provides the course ID
     """
-    courses = await get_courses(canvas_url, token)
-    return groups_from_canvas_courses(courses, canvas_course_key)
+    if canvas_course_key not in VALID_CANVAS_COURSE_KEYS:
+        raise ValueError(f"Invalid course key: {canvas_course_key!r}")
+
+    if canvas_course_key not in VALID_CANVAS_SECTION_KEYS:
+        raise ValueError(f"Invalid section key: {canvas_section_key!r}")
+
+    courses = await get_courses(ensure_base_url(canvas_url), token)
+    return groups_from_canvas_courses(courses, canvas_course_key, canvas_section_key)
 
 
 get_course_groups.scopes = ["url:GET|/api/v1/courses"]
@@ -212,7 +251,7 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
     :param canvas_url: URL to Canvas instance
     :param token: authentication token granted by OAuth
     """
-    self_groups = await get_self_groups(canvas_url, token)
+    self_groups = await get_self_groups(ensure_base_url(canvas_url), token)
     return groups_from_canvas_groups(self_groups)
 
 

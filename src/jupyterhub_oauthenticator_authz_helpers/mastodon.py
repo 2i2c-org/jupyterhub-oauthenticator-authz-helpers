@@ -7,13 +7,12 @@ from typing import Any
 
 import aiohttp
 
-from .common import AuthURLs, ensure_base_url
+from .common import AuthURLs, BaseURL, ensure_base_url
 
 
 async def get_relationships(
-    mastodon_url: str, token: str, relationships: Iterable[str]
+    mastodon_url: BaseURL, token: str, relationships: Iterable[str]
 ) -> list[str]:
-    mastodon_url = ensure_base_url(mastodon_url)
     relationships_url = f"{mastodon_url}/api/v1/accounts/relationships"
 
     async with (
@@ -41,7 +40,7 @@ async def get_followed_groups(
     See https://docs.joinmastodon.org/methods/accounts/#relationships.
     """
     relationships = await get_relationships(
-        mastodon_url, token, id_to_group_name.keys()
+        ensure_base_url(mastodon_url), token, id_to_group_name.keys()
     )
     groups = []
     for item in relationships:
