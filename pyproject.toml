@@ -32,7 +32,7 @@ dependencies = [
 
 [dependency-groups]
 test = ["pytest>7", "pytest-asyncio"]
-docs = ["sphinx>=9", "furo"]
+docs = ["sphinx>=9", "sphinxawesome-theme"]
 mypy = ["mypy"]
 
 [project.urls]
