@@ -1,15 +1,15 @@
-from typing import NamedTuple, NewType, cast
+from typing import NamedTuple
 
-BaseURL = NewType("BaseURL", str)
+from yarl import URL
 
 
-def ensure_base_url(url: str) -> BaseURL:
+def ensure_base_url(url: str) -> URL:
     """
     Ensure that URL does not end with /
 
     :param url: URL
     """
-    return cast(BaseURL, url.removesuffix("/"))
+    return URL(url.removesuffix("/"))
 
 
 class AuthURLs(NamedTuple):

@@ -26,7 +26,8 @@ classifiers = [
 ]
 dependencies = [
   "aiohttp",
-  "escapism"
+  "escapism",
+  "yarl"
 ]
 
 [dependency-groups]

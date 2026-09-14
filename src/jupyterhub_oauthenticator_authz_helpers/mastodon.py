@@ -6,8 +6,9 @@ from collections.abc import Collection, Iterable
 from typing import Any, TypedDict
 
 import aiohttp
+from yarl import URL
 
-from .common import AuthURLs, BaseURL, ensure_base_url
+from .common import AuthURLs, ensure_base_url
 
 
 class Relationship(TypedDict):
@@ -16,7 +17,7 @@ class Relationship(TypedDict):
 
 
 async def get_relationships(
-    mastodon_url: BaseURL, token: str, relationships: Iterable[str]
+    mastodon_url: URL, token: str, relationships: Iterable[str]
 ) -> list[Relationship]:
     relationships_url = f"{mastodon_url}/api/v1/accounts/relationships"
 
@@ -87,11 +88,11 @@ def build_auth_urls(mastodon_url: str) -> AuthURLs:
 
     :param canvas_url: URL to Mastodon instance
     """
-    mastodon_url = ensure_base_url(mastodon_url)
+    mastodon_base_url = ensure_base_url(mastodon_url)
     return AuthURLs(
-        f"{mastodon_url}/oauth/authorize",
-        f"{mastodon_url}/oauth/token",
-        f"{mastodon_url}/api/v1/accounts/verify_credentials",
+        f"{mastodon_base_url}/oauth/authorize",
+        f"{mastodon_base_url}/oauth/token",
+        f"{mastodon_base_url}/api/v1/accounts/verify_credentials",
     )
 
 

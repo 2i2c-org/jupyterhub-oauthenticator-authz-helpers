@@ -7,8 +7,9 @@ from collections.abc import Iterable
 
 import aiohttp
 import escapism  # type: ignore
+from yarl import URL
 
-from .common import AuthURLs, BaseURL, ensure_base_url
+from .common import AuthURLs, ensure_base_url
 
 
 async def fetch_canvas_resource(
@@ -47,7 +48,7 @@ async def fetch_canvas_resource(
     return sequence
 
 
-async def get_courses(canvas_url: BaseURL, token: str) -> list:
+async def get_courses(canvas_url: URL, token: str) -> list:
     """
     Get list of active courses for the current user.
 
@@ -61,7 +62,7 @@ async def get_courses(canvas_url: BaseURL, token: str) -> list:
     return await fetch_canvas_resource(token, url, includes=["sections"])
 
 
-async def get_self_groups(canvas_url: BaseURL, token: str) -> list:
+async def get_self_groups(canvas_url: URL, token: str) -> list:
     """
     Get list of active groups for the current user.
 
@@ -272,11 +273,11 @@ def build_auth_urls(canvas_url: str) -> AuthURLs:
 
     :param canvas_url: URL to Canvas instance
     """
-    canvas_url = ensure_base_url(canvas_url)
+    canvas_base_url = ensure_base_url(canvas_url)
     return AuthURLs(
-        f"{canvas_url}/login/oauth2/auth",
-        f"{canvas_url}/login/oauth2/token",
-        f"{canvas_url}/api/v1/users/self/profile",
+        f"{canvas_base_url}/login/oauth2/auth",
+        f"{canvas_base_url}/login/oauth2/token",
+        f"{canvas_base_url}/api/v1/users/self/profile",
     )
 
 
