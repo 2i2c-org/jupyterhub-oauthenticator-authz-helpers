@@ -235,7 +235,7 @@ async def get_course_groups(
     return groups_from_canvas_courses(courses, canvas_course_key, canvas_section_key)
 
 
-get_course_groups.scopes = ["url:GET|/api/v1/courses"]  # type: ignore
+get_course_groups.scopes = ("url:GET|/api/v1/courses",)  # type: ignore
 
 
 async def get_user_groups(canvas_url: str, token: str) -> list:
@@ -257,7 +257,7 @@ async def get_user_groups(canvas_url: str, token: str) -> list:
     return groups_from_canvas_groups(self_groups)
 
 
-get_user_groups.scopes = ["url:GET|/api/v1/users/self/groups"]  # type: ignore
+get_user_groups.scopes = ("url:GET|/api/v1/users/self/groups",)  # type: ignore
 
 
 # Base scopes needed for auth
@@ -281,4 +281,4 @@ def build_auth_urls(canvas_url: str) -> AuthURLs:
     )
 
 
-build_auth_urls.scopes = ["url:GET|/api/v1/users/:user_id/profile"]  # type: ignore
+build_auth_urls.scopes = ("url:GET|/api/v1/users/:user_id/profile",)  # type: ignore

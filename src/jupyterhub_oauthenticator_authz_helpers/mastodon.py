@@ -72,7 +72,7 @@ async def get_followed_groups(
     return groups
 
 
-get_followed_groups.scopes = ["read:follows"]  # type: ignore
+get_followed_groups.scopes = ("read:follows",)  # type: ignore
 
 
 # Base scopes needed for auth
@@ -96,4 +96,4 @@ def build_auth_urls(mastodon_url: str) -> AuthURLs:
     )
 
 
-build_auth_urls.scopes = ["read:accounts"]  # type: ignore
+build_auth_urls.scopes = ("read:accounts",)  # type: ignore
