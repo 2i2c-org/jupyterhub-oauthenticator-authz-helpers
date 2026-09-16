@@ -12,13 +12,13 @@ Canvas is a `Learning Management System <https://en.wikipedia.org/wiki/Learning_
 Installing the Library
 ----------------------
 
-To use these helpers, you must first install the `jupyterhub-oauthenticator_authz_helpers` package from PyPI into the same environment as your JupyterHub itself. For `Zero to JupyterHub <https://zero-to-jupyterhub.readthedocs.io/>`__ users, this means creating a custom Docker image that installs this package alongside the JupyterHub dependencies.
+To use these helpers, you must first install the ``jupyterhub-oauthenticator_authz_helpers`` package from PyPI into the same environment as your JupyterHub itself. For `Zero to JupyterHub <https://zero-to-jupyterhub.readthedocs.io/>`__ users, this means creating a custom Docker image that installs this package alongside the JupyterHub dependencies.
 
 
 Authorizing with the Canvas API
 -------------------------------
 
-JupyterHubs's *OAuthenticator* library ships with a :py:class:`GenericOAuthenticator <oauthenticator.generic.GenericOAuthenticator>` which interfaces with `OAuth2 <https://en.wikipedia.org/wiki/OAuth>`__ identity providers. In order to complete one OAuth flow, the authenticator requires the :py:attr:`authorize_url <oauthenticator.generic.GenericOAuthenticator.authorize_url>` and :py:attr:`token_url <oauthenticator.generic.GenericOAuthenticator.token_url>` attributes to be configured that points to the OAuth2 authorization and token endpoints of the Canvas instance.
+JupyterHubs's *OAuthenticator* library ships with a :py:class:`GenericOAuthenticator <oauthenticator.generic.GenericOAuthenticator>` which interfaces with `OAuth2 <https://en.wikipedia.org/wiki/OAuth>`__ identity providers. In order to complete one OAuth flow, the authenticator requires the :py:attr:`authorize_url <oauthenticator.generic.GenericOAuthenticator.authorize_url>` and :py:attr:`token_url <oauthenticator.generic.GenericOAuthenticator.token_url>` attributes to be configured that points to the OAuth2 authorization and token endpoints of the Canvas instance. We will generate these URLs using the :py:func:`build_auth_urls <jupyterhub_oauthenticator_authz_helpers.canvas.build_auth_urls>` helper.
 
 .. code-block:: python
 
@@ -39,11 +39,26 @@ Whilst in this case, we could simply write the authorize URL and scopes by hand,
 Authenticating the Canvas User
 ------------------------------
 
-Together, the :py:attr:`authorize_url <oauthenticator.generic.GenericOAuthenticator.authorize_url>` and :py:attr:`token_url <oauthenticator.generic.GenericOAuthenticator.token_url>` endpoints returns an access token that provides authorization to a Canvas instance's resources on behalf of the current Canvas user. This alone is insufficient to set-up Canvas authentication; the authenticator does not yet have the ability to determine _who_ is accessing the hub from this token alone.
+Together, the :py:attr:`authorize_url <oauthenticator.generic.GenericOAuthenticator.authorize_url>` and :py:attr:`token_url <oauthenticator.generic.GenericOAuthenticator.token_url>` endpoints returns an access token that provides authorization to a Canvas instance's resources on behalf of the current Canvas user. This alone is insufficient to set-up Canvas authentication, as the authenticator does not have the ability to determine *who* is accessing the hub from this token alone.
 
-For this, we'll need to query a userdata URL that returns identity information about the current token holder. Let's now configure the :py:attr:`userdata_url <oauthenticator.generic.GenericOAuthenticator.userdata_url>` to obtain structured information about the Canvas user's identity, and configure the authenticator to derive a username from this data.
+For this, we'll need to query a user-data URL that returns identity information about the current token holder. Let's now configure the :py:attr:`userdata_url <oauthenticator.generic.GenericOAuthenticator.userdata_url>` to obtain structured information about the Canvas user's identity, and configure the authenticator to derive a username from this data. For example, if the Canvas API returns a ``login_id`` field in the ``userdata_url`` response:
 
 .. code-block:: python
+   :emphasize-lines: 8, 14
 
-   # Configure auth URL
+   from jupyterhub_oauthenticator_authz_helpers import build_auth_urls
+
+   canvas_url = "<CANVAS-URL>"
+
+   cfg = c.GenericOAuthenticator
+
+   # Configure various auth URLs
    cfg.authorize_url, cfg.token_url, cfg.userdata_url = build_auth_urls(canvas_url)
+
+   # Scopes that this token will need
+   cfg.scope = build_auth_urls.scopes
+
+   # Indicate which user-data item yields the username
+   cfg.username_claim = "login_id"
+
+Now we've successfully configured our JupyterHub with the ability to identify the username of user that log-in with Canvas. However, these users will not, by default, be able to access the hub. For that, we must visit the topic of :doc:`authentication <canvas-authorization>`.
