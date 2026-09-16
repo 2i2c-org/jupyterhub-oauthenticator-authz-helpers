@@ -8,6 +8,8 @@
 JupyterHub Authentication and Authorization Helpers
 ===================================================
 
+The :py:class:`GenericOAuthenticator <oauthenticator.generic.GenericOAuthenticator>` JupyterHub authenticator is highly versatile for integrating JupyterHub with third-part OAuth providers. Rather than building custom :py:class:`OAuthenticator <oauthenticator.oauth2.OAuthenticator>` subclasses, the helpers provided by this library may be used to support new OAuth providers.
+
 .. toctree::
    :maxdepth: 1
    :caption: How-to Guide
