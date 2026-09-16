@@ -21,7 +21,7 @@ async def fetch_canvas_resource(
     https://developerdocs.instructure.com/services/canvas/basics/file.pagination
     """
     sequence = []
-    params = {"include": includes}
+    params = {} if includes is None else {"include": includes}
 
     async with aiohttp.ClientSession() as session:
         while True:
