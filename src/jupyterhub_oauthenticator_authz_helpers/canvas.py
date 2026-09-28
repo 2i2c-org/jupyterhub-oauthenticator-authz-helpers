@@ -107,11 +107,19 @@ def groups_from_canvas_courses(
 
         course::<course>::enrollment_type::<enrollment-type>
 
+    and
+
+        course::<course>::section::<section>
+
+    and
+
+        course::<course>::section::<section>::enrollment_role::<enrollment-role>
+
     for each Canvas group the user is a member of.
 
     :param canvas_groups: list of Canvas Course resources
     :param canvas_course_key: key within Course response that defines the course ID
-    :param canvas_section_key: key within Section response that defines the course ID
+    :param canvas_section_key: key within Section response that defines the section ID
     """
     groups = []
 
@@ -144,6 +152,17 @@ def groups_from_canvas_courses(
             groups.append(
                 build_jupyterhub_group(
                     "course", course_component, "section", section_component
+                )
+            )
+
+            groups.append(
+                build_jupyterhub_group(
+                    "course",
+                    course_component,
+                    "section",
+                    section_component,
+                    "enrollment_role",
+                    section["enrollment_role"],
                 )
             )
 
