@@ -15,7 +15,7 @@ async def test_canvas_courses_default(mock_response):
 
     assert groups == [
         "course::2i2c&20JupyterHub&20Integration&20Testing",
-        "course::2i2c&20JupyterHub&20Integration&20Testing::enrollment_type::teacher",
+        "course::2i2c&20JupyterHub&20Integration&20Testing::role::TeacherEnrollment",
     ]
 
 
@@ -26,7 +26,7 @@ async def test_canvas_courses_code(mock_response):
 
     assert groups == [
         "course::2i2c-jupyter",
-        "course::2i2c-jupyter::enrollment_type::teacher",
+        "course::2i2c-jupyter::role::TeacherEnrollment",
     ]
 
 
@@ -37,7 +37,7 @@ async def test_canvas_courses_id(mock_response):
 
     assert groups == [
         "course::3248",
-        "course::3248::enrollment_type::teacher",
+        "course::3248::role::TeacherEnrollment",
     ]
 
 
@@ -58,10 +58,10 @@ async def test_canvas_sections_default(mock_response):
     assert groups == [
         # Check that the default groups are there
         "course::2i2c&20JupyterHub&20Integration&20Testing",
-        "course::2i2c&20JupyterHub&20Integration&20Testing::enrollment_type::teacher",
+        "course::2i2c&20JupyterHub&20Integration&20Testing::role::TeacherEnrollment",
         # Test the name of section
         "course::2i2c&20JupyterHub&20Integration&20Testing::section::2i2c&20Jupyter&20Test&20Course",
-        "course::2i2c&20JupyterHub&20Integration&20Testing::section::2i2c&20Jupyter&20Test&20Course::enrollment_role::TeacherEnrollment",
+        "course::2i2c&20JupyterHub&20Integration&20Testing::section::2i2c&20Jupyter&20Test&20Course::role::TeacherEnrollment",
     ]
 
 
@@ -72,7 +72,7 @@ async def test_canvas_sections_id(mock_response):
 
     assert groups == [
         "course::2i2c&20JupyterHub&20Integration&20Testing",
-        "course::2i2c&20JupyterHub&20Integration&20Testing::enrollment_type::teacher",
+        "course::2i2c&20JupyterHub&20Integration&20Testing::role::TeacherEnrollment",
         "course::2i2c&20JupyterHub&20Integration&20Testing::section::476176",
-        "course::2i2c&20JupyterHub&20Integration&20Testing::section::476176::enrollment_role::TeacherEnrollment",
+        "course::2i2c&20JupyterHub&20Integration&20Testing::section::476176::role::TeacherEnrollment",
     ]

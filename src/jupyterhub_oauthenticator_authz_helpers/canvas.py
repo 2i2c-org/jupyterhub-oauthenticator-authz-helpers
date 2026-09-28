@@ -105,7 +105,7 @@ def groups_from_canvas_courses(
 
     and
 
-        course::<course>::enrollment_type::<enrollment-type>
+        course::<course>::role::<enrollment-role>
 
     and
 
@@ -113,7 +113,7 @@ def groups_from_canvas_courses(
 
     and
 
-        course::<course>::section::<section>::enrollment_role::<enrollment-role>
+        course::<course>::section::<section>::role::<enrollment-role>
 
     for each Canvas group the user is a member of.
 
@@ -138,8 +138,8 @@ def groups_from_canvas_courses(
                 build_jupyterhub_group(
                     "course",
                     course_component,
-                    "enrollment_type",
-                    enrollment.get("type"),
+                    "role",
+                    enrollment["role"],
                 )
             )
 
@@ -161,7 +161,7 @@ def groups_from_canvas_courses(
                     course_component,
                     "section",
                     section_component,
-                    "enrollment_role",
+                    "role",
                     section["enrollment_role"],
                 )
             )
