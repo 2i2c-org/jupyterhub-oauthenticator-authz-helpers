@@ -61,6 +61,7 @@ async def test_canvas_sections_default(mock_response):
         "course::2i2c&20JupyterHub&20Integration&20Testing::enrollment_type::teacher",
         # Test the name of section
         "course::2i2c&20JupyterHub&20Integration&20Testing::section::2i2c&20Jupyter&20Test&20Course",
+        "course::2i2c&20JupyterHub&20Integration&20Testing::section::2i2c&20Jupyter&20Test&20Course::enrollment_role::TeacherEnrollment",
     ]
 
 
@@ -73,4 +74,5 @@ async def test_canvas_sections_id(mock_response):
         "course::2i2c&20JupyterHub&20Integration&20Testing",
         "course::2i2c&20JupyterHub&20Integration&20Testing::enrollment_type::teacher",
         "course::2i2c&20JupyterHub&20Integration&20Testing::section::476176",
+        "course::2i2c&20JupyterHub&20Integration&20Testing::section::476176::enrollment_role::TeacherEnrollment",
     ]
